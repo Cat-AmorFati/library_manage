@@ -74,9 +74,9 @@
         <td><%= row.get("publish_date") %></td>
         <td><%= row.get("price") %></td>
         <td>
-            <a href="edit.jsp?isbn=<%= row.get("isbn") %>">修改</a>
+            <a href="../edit.jsp?isbn=<%= row.get(">修改</a>
             &nbsp;
-            <a href="del.jsp?isbn=<%= row.get("isbn") %>">删除</a>
+            <a href="del.jsp?isbn=<%= row.get(">删除</a>
         </td>
     </tr>
     <%

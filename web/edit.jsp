@@ -1,105 +1,168 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="beans.Book, java.util.*" %>
-<html>
+<%@ page contentType="text/html; charset=UTF-8" %>
+<%@ page import="model.Book" %>
+<%
+    Book b = (Book) request.getAttribute("book");
+%>
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
-    <title>修改图书信息</title>
+    <meta charset="UTF-8">
+    <title>编辑图书</title>
+    <link rel="stylesheet" href="css/style.css">
     <style>
         body {
             font-family: "Microsoft YaHei", sans-serif;
-            background-color: #f9f9f9;
+            background: linear-gradient(135deg, #e0f7ff, #f8f9fa);
+            color: #333;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background: #fff;
+            padding: 40px 50px;
+            border-radius: 10px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            width: 420px;
+            animation: fadeIn .5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h2 {
+            color: #007bff;
+            margin-bottom: 25px;
             text-align: center;
         }
-        form {
-            background: white;
-            padding: 20px;
-            margin: 40px auto;
-            width: 400px;
-            box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
-            border-radius: 6px;
-        }
-        label {
-            display: block;
-            text-align: left;
-            margin-top: 10px;
-            margin-bottom: 4px;
+
+        form p {
+            margin: 15px 0;
             font-weight: bold;
         }
-        input {
-            width: 95%;
-            padding: 8px;
-            margin-bottom: 10px;
+
+        input[type="text"], input[type="number"], input[type="date"] {
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
             border: 1px solid #ccc;
-            border-radius: 4px;
+            font-size: 14px;
+            margin-top: 6px;
+            transition: 0.2s;
         }
+
+        input:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+            outline: none;
+        }
+
+        input[readonly] {
+            background: #f7f7f7;
+            cursor: not-allowed;
+        }
+
         button {
-            padding: 8px 16px;
-            margin: 10px 5px;
-            border: none;
-            border-radius: 4px;
-            background-color: #007bff;
+            width: 100%;
+            background: linear-gradient(135deg, #007bff, #0056b3);
             color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 15px;
             cursor: pointer;
+            margin-top: 15px;
+            transition: 0.2s;
         }
+
         button:hover {
-            background-color: #0056b3;
+            background: linear-gradient(135deg, #0056b3, #004080);
+            transform: scale(1.02);
         }
-        a {
+
+        .footer {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .footer a {
             color: #007bff;
             text-decoration: none;
         }
-        a:hover {
+
+        .footer a:hover {
             text-decoration: underline;
+        }
+
+        .error {
+            text-align: center;
+            color: red;
+            font-size: 14px;
         }
     </style>
 </head>
-
 <body>
-<h2>修改图书信息</h2>
-<a href="index.jsp">返回首页</a>
 
-<jsp:useBean id="book" class="beans.Book" scope="page" />
-<jsp:setProperty name="book" property="isbn" param="isbn" />
+<div class="container">
+    <% if (b == null) { %>
+    <h2>❌ 未找到该图书</h2>
+    <p class="error">可能该图书已被删除或编号错误。</p>
+    <div class="footer"><a href="book?action=list">返回列表</a></div>
 
-<%
-    Map<String, Object> data = book.getBook();
-    if (data != null) {
-%>
+    <% } else { %>
+    <h2>✏️ 编辑图书信息</h2>
 
-<form action="edit_do.jsp" method="post">
-    <label for="isbn">ISBN：</label>
-    <input type="text" id="isbn" name="isbn" value="<%= data.get("isbn") %>" readonly>
+    <form action="book" method="post">
+        <input type="hidden" name="action" value="update">
 
-    <label for="title">书名：</label>
-    <input type="text" id="title" name="title" value="<%= data.get("title") %>" required>
+        <p>ISBN（只读）：
+            <input name="isbn" value="<%= b.getIsbn() %>" readonly>
+        </p>
 
-    <label for="author">作者：</label>
-    <input type="text" id="author" name="author" value="<%= data.get("author") %>" required>
+        <p>标题：
+            <input name="title" value="<%= b.getTitle() %>" required>
+        </p>
 
-    <label for="publisher">出版社：</label>
-    <input type="text" id="publisher" name="publisher" value="<%= data.get("publisher") %>" required>
+        <p>作者：
+            <input name="author" value="<%= b.getAuthor() %>" required>
+        </p>
 
-    <label for="publishDate">出版日期：</label>
-    <input type="date" id="publishDate" name="publishDate" value="<%= data.get("publish_date") %>" required>
+        <p>出版社：
+            <input name="publisher" value="<%= b.getPublisher() %>" required>
+        </p>
 
-    <label for="price">价格（单位：元）：</label>
-    <input type="number" id="price" name="price" step="0.01" min="0" value="<%= data.get("price") %>" required>
+        <p>出版日期：
+            <input name="publish_date" type="date"
+                   value="<%= (b.getPublishDate() != null ? b.getPublishDate().toString() : "") %>">
+        </p>
 
-    <label for="stock">库存数量：</label>
-    <input type="number" id="stock" name="stock" min="0" value="<%= data.get("stock") %>" required>
+        <p>价格：
+            <input name="price" type="number" step="0.01" value="<%= b.getPrice() %>" required>
+        </p>
 
-    <div>
+        <p>库存：
+            <input name="stock" type="number" min="0" value="<%= b.getStock() %>" required>
+        </p>
+
         <button type="submit">保存修改</button>
-        <button type="reset" style="background-color: gray;">重置</button>
-    </div>
-</form>
+    </form>
 
-<%
-} else {
-%>
-<p>未找到该图书信息，请返回 <a href="index.jsp">首页</a>。</p>
-<%
-    }
-%>
+    <div class="footer">
+        <a href="book?action=list">⬅ 取消并返回</a>
+    </div>
+    <% } %>
+</div>
+
 </body>
 </html>
-

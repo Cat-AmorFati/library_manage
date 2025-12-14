@@ -1,10 +1,144 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <title>添加图书</title>
+    <link href="css/style.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: "Microsoft YaHei", sans-serif;
+            background: linear-gradient(135deg, #e0f7ff, #f8f9fa);
+            color: #333;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background: #fff;
+            padding: 40px 50px;
+            border-radius: 10px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            width: 420px;
+            animation: fadeIn .5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h2 {
+            color: #007bff;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        form p {
+            margin: 15px 0;
+            font-weight: bold;
+        }
+
+        input[type="text"], input[type="number"], input[type="date"] {
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+            margin-top: 6px;
+            transition: 0.2s;
+        }
+
+        input:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 15px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #0056b3, #004080);
+            transform: scale(1.02);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .footer a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-$END$
+
+<div class="container">
+    <h2>📚 添加图书</h2>
+
+    <form action="book" method="post">
+        <input name="action" type="hidden" value="add">
+
+        <p>ISBN：
+            <input name="isbn" placeholder="请输入 ISBN 编号" required type="text">
+        </p>
+
+        <p>标题：
+            <input name="title" placeholder="请输入书名" required type="text">
+        </p>
+
+        <p>作者：
+            <input name="author" placeholder="请输入作者" required type="text">
+        </p>
+
+        <p>出版社：
+            <input name="publisher" placeholder="请输入出版社" required type="text">
+        </p>
+
+        <p>出版日期：
+            <input name="publish_date" type="date">
+        </p>
+
+        <p>价格：
+            <input name="price" placeholder="请输入价格" required step="0.01" type="number">
+        </p>
+
+        <p>库存：
+            <input min="0" name="stock" placeholder="请输入库存数量" required type="number">
+        </p>
+
+        <button type="submit">提交</button>
+    </form>
+
+    <div class="footer">
+        <a href="book?action=list">⬅ 返回图书列表</a>
+    </div>
+</div>
+
 </body>
 </html>
